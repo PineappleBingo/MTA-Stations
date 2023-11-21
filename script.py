@@ -57,7 +57,7 @@ def scrape_shuttle_stations(line):
 
         shuttle_stations_dic["GS"] = m_stations
         shuttle_stations_dic["FS"] = b_stations
-        shuttle_stations_dic["S"] = q_stations
+        shuttle_stations_dic["RS"] = q_stations
         
         return shuttle_stations_dic
 
@@ -67,31 +67,30 @@ def scrape_shuttle_stations(line):
 
 stations_by_ruotes = {}
 
-# # # Get Station Names from line 1 ~ 7
-# for line in range(1, 8):
-#     stations_by_ruotes[str(line)] = scrape_stations(line)  
+# # Get Station Names from line 1 ~ 7
+for line in range(1, 8):
+    stations_by_ruotes[str(line)] = scrape_stations(line)  
 
-# # Get Station Names Letter Lines
-# lines = ["A", "B", "C", "D", "E", "F", "G", "J", "L", "M", "N", "Q", "R", "W", "Z"]
-# for line in lines:
-#     stations_by_ruotes[line] = scrape_stations(line) 
+# Get Station Names Letter Lines
+lines = ["A", "B", "C", "D", "E", "F", "G", "J", "L", "M", "N", "Q", "R", "W", "Z"]
+for line in lines:
+    stations_by_ruotes[line] = scrape_stations(line) 
 
-scrape_shuttle_stations("S")
+stations_by_ruotes.update(scrape_shuttle_stations("S"))
 
 # print("\n\nstations_by_ruotes:", stations_by_ruotes)
 
+# Convert Dict to dataframe
+df = pd.DataFrame.from_dict(stations_by_ruotes, orient='index')
 
-# # Convert Dict to dataframe
-# df = pd.DataFrame.from_dict(stations_by_ruotes, orient='index')
+# Transpose coloumns and rows
+new_df = df.transpose()
+print("\n\n-------- Stations DF --------\n", new_df)
 
-# # Transpose coloumns and rows
-# new_df = df.transpose()
-# print("\n\n-------- Stations DF --------\n", new_df)
+# Save the DataFrame to a CSV file
+new_df.to_csv('subway_stations.csv', index=False)
 
-# # Save the DataFrame to a CSV file
-# new_df.to_csv('subway_stations.csv', index=False)
-
-# print("CSV file created successfully.")
+print("CSV file created successfully.")
 
 
 # Scrape station names
